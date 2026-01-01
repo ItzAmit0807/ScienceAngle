@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SYSTEM</title>
+
+<meta name="theme-color" content="#00e5ff">
+
+<style>
+body{
+  margin:0;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  background:#0b0b0b;
+  color:#fff;
+  text-align:center;
+}
+h1{ margin-top:20px; }
+.card{
+  margin:16px;
+  padding:16px;
+  background:#111;
+  border-radius:14px;
+  border:1px solid #00e5ff33;
+}
+.bar{
+  height:10px;
+  background:#222;
+  border-radius:6px;
+  overflow:hidden;
+}
+.fill{
+  height:100%;
+  background:#00e5ff;
+  width:0%;
+}
+button{
+  width:80%;
+  margin:10px 0;
+  padding:12px;
+  font-size:16px;
+  background:#00e5ff;
+  border:none;
+  border-radius:10px;
+  font-weight:600;
+}
+.popup{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:#000c;
+}
+.popup div{
+  background:#111;
+  padding:20px;
+  border-radius:12px;
+  border:1px solid #00e5ff;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🧿 SYSTEM</h1>
+
+<div class="card">
+  <p>Level <span id="level">1</span></p>
+  <div class="bar"><div id="xpbar" class="fill"></div></div>
+  <p>XP <span id="xp">0</span>/100</p>
+</div>
+
+<div class="card">
+  <p>💪 STR: <span id="str">0</span></p>
+  <p>📘 INT: <span id="int">0</span></p>
+  <p>🔥 DISC: <span id="disc">0</span></p>
+</div>
+
+<div class="card">
+  <button onclick="quest('study')">Study Completed</button>
+  <button onclick="quest('workout')">Workout Completed</button>
+</div>
+
+<div class="popup" id="popup">
+  <div>
+    <p id="msg"></p>
+    <button onclick="closePop()">OK</button>
+  </div>
+</div>
+
+<script>
+let data = JSON.parse(localStorage.getItem("system")) || {
+  level:1, xp:0, str:0, int:0, disc:0
+};
+
+function save(){
+  localStorage.setItem("system", JSON.stringify(data));
+}
+
+function render(){
+  level.textContent = data.level;
+  xp.textContent = data.xp;
+  str.textContent = data.str;
+  int.textContent = data.int;
+  disc.textContent = data.disc;
+  xpbar.style.width = data.xp + "%";
+}
+
+function quest(type){
+  data.xp += 20;
+  data.disc += 1;
+  if(type === "study") data.int += 2;
+  if(type === "workout") data.str += 2;
+
+  if(data.xp >= 100){
+    data.xp = 0;
+    data.level++;
+    show("LEVEL UP");
+  } else {
+    show("QUEST COMPLETED +20 XP");
+  }
+  save();
+  render();
+}
+
+function show(t){
+  msg.textContent = t;
+  popup.style.display = "flex";
+}
+function closePop(){
+  popup.style.display = "none";
+}
+
+render();
+</script>
+
+</body>
+</html>
